@@ -24,8 +24,9 @@ using Agents = std::vector<Agent*>;
 
 // low-level node
 struct LNode {
-  std::vector<uint> who;
-  Vertices where;
+  uint who;
+  Vertex* where;
+  LNode* parent;
   const uint depth;
   LNode(LNode* parent = nullptr, uint i = 0,
         Vertex* v = nullptr);  // who and where
@@ -46,12 +47,13 @@ struct HNode {
   uint f;        // g + h (might be updated)
 
   // for low-level search
-  std::vector<float> priorities;
+  std::vector<uint> in_corridor;
+  std::vector<float> d_priorities, priorities;
   std::vector<uint> order;
   std::queue<LNode*> search_tree;
 
   HNode(const Config& _C, DistTable& D, HNode* _parent, const uint _g,
-        const uint _h);
+        const uint _h, std::vector<bool> &into_crd);
   ~HNode();
 };
 using HNodes = std::vector<HNode*>;
@@ -73,6 +75,7 @@ struct Planner {
   uint loop_cnt;      // auxiliary
 
   // used in PIBT
+  std::vector<bool> into_crd; // check whether the next location is in a corridor
   std::vector<std::array<Vertex*, 5> > C_next;  // next locations, used in PIBT
   std::vector<float> tie_breakers;              // random values, used in PIBT
   Agents A;
@@ -92,6 +95,7 @@ struct Planner {
   uint get_edge_cost(const Config& C1, const Config& C2);
   uint get_edge_cost(HNode* H_from, HNode* H_to);
   uint get_h_value(const Config& C);
+  //float h(uint i, Vertex* v, HNode* H);
   bool get_new_config(HNode* H, LNode* L);
   bool funcPIBT(Agent* ai);
 

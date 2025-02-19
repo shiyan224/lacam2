@@ -40,4 +40,4 @@
 **/build/
 **/local/
 Manifest.toml
-map
+exp/map
