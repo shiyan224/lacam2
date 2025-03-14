@@ -129,7 +129,7 @@ Solution Planner::solve(std::string& additional_info)
       H_goal = H;
       solver_info(1, "found solution, cost: ", H->g);
       if (objective == OBJ_NONE) break;
-      continue;
+      break;
     }
 
     // create successors at the low-level search
